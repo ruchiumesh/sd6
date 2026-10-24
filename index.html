@@ -1,0 +1,828 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REWAVE | Every Drop Deserves Another Life</title>
+
+<style>
+:root{
+  --bg:#05070d;--panel:#0b1422;--blue:#087cff;
+  --cyan:#00e5ff;--green:#54ff9b;--yellow:#ffdc55;
+  --red:#ff5268;--text:#eaf5ff;--muted:#91a8bd;
+  --line:#163550;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:85px}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:Inter,Arial,sans-serif;line-height:1.6;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse at 10% 10%,#063a7330,transparent 40%),
+  radial-gradient(ellipse at 90% 50%,#004c3920,transparent 45%);
+}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+section{padding:85px max(5%,calc((100% - 1200px)/2))}
+h1,h2,h3{line-height:1.15}
+h2{font-size:clamp(28px,4vw,44px);margin-bottom:15px}
+h3{margin-bottom:10px}
+p{color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
+.eyebrow{color:var(--cyan);letter-spacing:3px;font-size:11px;font-weight:800}
+.section-head{margin-bottom:35px}
+.section-head p{max-width:700px;margin-top:12px}
+.gradient{
+  background:linear-gradient(90deg,#087cff,#00e5ff,#5bffa8);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.glow{color:var(--cyan);text-shadow:0 0 25px #00e5ff70}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 20px;border-radius:9px;border:1px solid #087cff;
+  background:linear-gradient(120deg,#0754bb,#087cff);
+  color:white;font-weight:800;transition:.25s
+}
+.btn:hover{transform:translateY(-3px);box-shadow:0 0 25px #087cff60}
+.btn.outline{background:#08101d;border-color:#235071}
+.btn.green{background:#0c3829;border-color:#54ff9b;color:var(--green)}
+.nav{
+  position:sticky;top:0;z-index:50;background:#05070de9;
+  backdrop-filter:blur(18px);border-bottom:1px solid #17334a;
+  padding:12px 5%;display:flex;justify-content:space-between;align-items:center;gap:20px
+}
+.brand{font-size:24px;font-weight:1000;letter-spacing:3px;color:#087cff}
+.brand span{color:var(--cyan)}
+.navlinks{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#b9cfe0}
+.navlinks a:hover{color:var(--cyan)}
+.hero{
+  min-height:660px;position:relative;display:grid;
+  grid-template-columns:1.05fr .95fr;align-items:center;gap:30px;
+  padding-top:70px;padding-bottom:60px;overflow:hidden
+}
+.hero h1{font-size:clamp(60px,11vw,115px);font-weight:1000;
+  letter-spacing:-5px;color:#0752bc;text-shadow:0 0 50px #087cff50}
+.hero h1 span{color:#e8faff}
+.hero .tagline{font-size:clamp(20px,3vw,29px);margin:10px 0 15px;color:#c8e8ff}
+.hero-copy{max-width:580px}
+.hero-copy>p{margin-bottom:25px}
+.hero-art{position:relative;min-height:370px;display:grid;place-items:center}
+.orb{
+  width:min(340px,75vw);aspect-ratio:1;border-radius:50%;
+  border:1px solid #087cff60;
+  background:radial-gradient(circle at 35% 30%,#0d75bc80,#061326 60%,#05070d);
+  box-shadow:0 0 80px #087cff25,inset 0 0 70px #00e5ff15;
+  display:grid;place-items:center;position:relative;
+  animation:float 5s ease-in-out infinite
+}
+.orb:before,.orb:after{
+  content:"";position:absolute;inset:-17px;border-radius:50%;
+  border:1px dashed #00e5ff75;animation:spin 25s linear infinite
+}
+.orb:after{inset:-40px;border-color:#087cff50;animation-direction:reverse}
+.bigdrop{font-size:115px;filter:drop-shadow(0 0 25px #00c8ff)}
+.orb-label{position:absolute;bottom:45px;font-weight:900;letter-spacing:4px}
+@keyframes float{50%{transform:translateY(-13px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-150px);opacity:0}}
+@keyframes pulse{50%{box-shadow:0 0 35px currentColor}}
+@keyframes flow{to{stroke-dashoffset:-35}}
+@keyframes wave{to{background-position:200% 0}}
+.drop{
+  position:absolute;top:-30px;width:8px;height:12px;
+  border-radius:70% 30% 65% 35%;background:#00d5ff;
+  box-shadow:0 0 14px #00d5ff;animation:fall linear infinite
+}
+@keyframes fall{to{transform:translateY(700px) rotate(180deg);opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:35px}
+.stat,.card{
+  background:linear-gradient(145deg,#0b192a,#070d17);
+  border:1px solid #173750;border-radius:15px;padding:22px;
+  position:relative;overflow:hidden
+}
+.stat strong{font-size:clamp(20px,3vw,30px);display:block;color:var(--cyan)}
+.stat span{font-size:11px;color:var(--muted)}
+.badge{display:inline-block;padding:5px 9px;border-radius:6px;
+  background:#087cff18;border:1px solid #087cff50;color:var(--cyan);font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid.two{grid-template-columns:repeat(2,1fr)}
+.card{transition:.25s}
+.card:hover{border-color:#087cff;transform:translateY(-3px)}
+.card p{font-size:14px}
+.icon{font-size:30px;margin-bottom:12px;display:block}
+.number{color:var(--cyan);font-size:13px;font-weight:900;letter-spacing:2px}
+.callout{margin-top:20px;border-left:3px solid var(--yellow);
+  background:#ffdc550b;padding:17px;border-radius:0 9px 9px 0}
+.callout p{font-size:13px}
+.darkband{background:linear-gradient(120deg,#071a2c,#08101b,#071c1a);
+  border-top:1px solid #173750;border-bottom:1px solid #173750}
+.tank-layout{display:grid;grid-template-columns:.7fr 1.3fr;gap:45px;align-items:center}
+.tank{
+  height:280px;max-width:230px;margin:auto;position:relative;overflow:hidden;
+  border:3px solid #2f87b8;border-radius:22px 22px 35px 35px;
+  background:#0a1a2c;box-shadow:0 0 30px #087cff20
+}
+.water-fill{position:absolute;bottom:0;left:0;width:100%;height:50%;
+  background:linear-gradient(#00e5ff80,#087cffc9);
+  transition:height 1s;overflow:hidden
+}
+.water-fill:before{content:"";position:absolute;top:-8px;width:200%;height:18px;
+  background:repeating-radial-gradient(ellipse at center,#00e5ff 0 20px,transparent 22px 42px);
+  animation:wave 4s linear infinite;background-size:200% 100%
+}
+.tank-label{position:absolute;inset:0;display:grid;place-items:center;
+  text-align:center;font-size:22px;font-weight:900;text-shadow:0 2px 8px #000}
+.big-number{font-size:clamp(35px,6vw,65px);font-weight:1000;color:var(--cyan)}
+.comparison{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:25px}
+.comparison .card strong{font-size:23px;color:var(--green);display:block}
+.flowchart{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:15px 2px 25px}
+.flowstep{
+  min-width:145px;flex:1;text-align:center;padding:18px 10px;
+  background:#09182a;border:1px solid #185079;border-radius:12px;
+  cursor:pointer;transition:.2s
+}
+.flowstep:hover,.flowstep.active{border-color:var(--cyan);background:#07304b;
+  box-shadow:0 0 20px #00e5ff20}
+.flowstep .icon{font-size:26px}
+.arrow{align-self:center;color:var(--cyan);font-size:22px;flex-shrink:0}
+.detailbox{padding:18px;border-radius:12px;background:#071421;border:1px solid #17415c}
+.system{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pipeline{display:flex;flex-direction:column;gap:8px}
+.node{
+  border:1px solid #1b4b68;background:#081523;padding:12px;
+  border-radius:9px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-align:left;color:var(--text)
+}
+.node:hover{border-color:var(--cyan)}
+.node .symbol{font-size:23px}
+.pipe{width:3px;height:15px;margin-left:25px;background:var(--cyan);
+  box-shadow:0 0 10px var(--cyan)}
+.pipe.green{background:var(--green);box-shadow:0 0 10px var(--green)}
+.pipe.red{background:var(--red);box-shadow:0 0 10px var(--red)}
+.panel{border:1px solid #204158;background:#08111e;border-radius:15px;padding:22px}
+.lights{display:flex;gap:20px;justify-content:center;margin:25px 0}
+.light{
+  width:72px;height:72px;border-radius:50%;border:5px solid #243748;
+  background:#17222d;display:grid;place-items:center;font-size:28px;
+  filter:grayscale(1);opacity:.4;transition:.3s
+}
+.light.active{filter:none;opacity:1;animation:pulse 2s infinite}
+.light.g.active{background:#0c3829;color:var(--green);border-color:var(--green)}
+.light.y.active{background:#3b3212;color:var(--yellow);border-color:var(--yellow)}
+.light.r.active{background:#421522;color:var(--red);border-color:var(--red)}
+.status{font-weight:900;text-align:center;padding:12px;border-radius:8px;background:#111d29}
+.status.g{color:var(--green)}.status.y{color:var(--yellow)}.status.r{color:var(--red)}
+.readings{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.reading{padding:12px;background:#0b1b2b;border-radius:9px}
+.reading span{display:block;color:var(--muted);font-size:11px}
+.reading strong{color:var(--cyan);font-size:19px}
+label{display:block;color:#c3d7e7;font-size:12px;margin:13px 0 6px}
+input[type=range]{width:100%;accent-color:var(--cyan)}
+input[type=number]{width:100%;background:#050d17;color:white;
+  border:1px solid #25435b;border-radius:7px;padding:9px}
+select{background:#091522;color:white;border:1px solid #24425b;padding:10px;border-radius:7px}
+input[type=range]{cursor:pointer}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.campus{
+  position:relative;border:1px solid #20516a;border-radius:16px;overflow:hidden;
+  min-height:340px;background:
+  radial-gradient(ellipse at 20% 20%,#1b593b 0%,transparent 32%),
+  radial-gradient(ellipse at 85% 80%,#164e32 0%,transparent 35%),#091a22;
+  padding:22px
+}
+.campus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;position:relative;z-index:2}
+.building{
+  min-height:85px;border:1px solid #3e7790;background:#132e43e8;
+  border-radius:10px;display:grid;place-items:center;text-align:center;
+  padding:10px;cursor:pointer;font-size:12px
+}
+.building:hover{border-color:var(--cyan);box-shadow:0 0 18px #00e5ff35}
+.campus-pipes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.campus-pipes path{fill:none;stroke-width:4;stroke-dasharray:10 8;
+  animation:flow 1.5s linear infinite;opacity:.8}
+.pipeblue{stroke:var(--cyan)}.pipeg{stroke:var(--green)}
+.campus-controls{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
+.campus-controls .btn{padding:9px 12px;font-size:12px}
+.tree-diagram{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:center}
+.tree-visual{
+  min-height:320px;border-radius:15px;position:relative;overflow:hidden;
+  display:grid;place-items:center;
+  background:radial-gradient(ellipse,#12482f,#08150f 72%)
+}
+.tree-visual .tree{font-size:125px;filter:drop-shadow(0 0 15px #54ff9b40)}
+.tree-visual .root{font-size:25px;color:#b9e9b4}
+.branch-list{display:flex;flex-direction:column;gap:10px}
+.branch{padding:12px;border:1px solid #28523b;background:#0b1b15;border-radius:9px}
+.branch strong{color:var(--green)}
+.utility-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.utility{border:1px solid #1b3a51;border-radius:12px;padding:18px;background:#091321}
+.utility .icon{font-size:35px}
+.budget-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:25px}
+.cost-row{display:grid;grid-template-columns:1fr 100px 90px;gap:10px;
+  align-items:center;padding:9px 0;border-bottom:1px solid #152a3b;font-size:12px}
+.cost-row input{width:100%;padding:7px}
+.total{font-size:35px;font-weight:1000;color:var(--cyan)}
+.progress{height:12px;background:#142536;border-radius:10px;overflow:hidden;margin:15px 0}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#087cff,#00e5ff,#54ff9b);transition:.3s}
+.budget-summary{position:sticky;top:100px;height:max-content}
+.warn{color:var(--yellow);font-size:13px;margin-top:10px}
+.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.impact-value{font-size:27px;font-weight:900;color:var(--green)}
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.phase{padding:18px;border-top:2px solid var(--cyan);background:#091421;border-radius:0 0 12px 12px}
+.phase b{font-size:12px;color:var(--cyan)}
+footer{padding:60px 5%;text-align:center;background:#04060a;border-top:1px solid #17334a}
+footer h2{font-size:clamp(30px,5vw,55px);margin:15px 0}
+footer .brand{font-size:30px;margin-bottom:10px}
+footer .actions{justify-content:center}
+.reveal{opacity:0;transform:translateY(18px);transition:.65s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:800px){
+ .nav{align-items:flex-start}.navlinks{gap:10px;max-width:65%}
+ .hero{grid-template-columns:1fr;padding-top:55px;text-align:center}
+ .hero-copy{margin:auto}.hero-art{min-height:300px}
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .tank-layout,.system,.tree-diagram,.budget-layout{grid-template-columns:1fr}
+ .utility-grid{grid-template-columns:repeat(2,1fr)}
+ .timeline{grid-template-columns:repeat(2,1fr)}
+ .budget-summary{position:static}
+}
+@media(max-width:480px){
+ section{padding:60px 5%}
+ .grid,.grid.two,.impact-grid{grid-template-columns:1fr}
+ .stats{gap:6px}.stat{padding:12px 7px}.stat span{font-size:10px}
+ .comparison{grid-template-columns:1fr}
+ .cost-row{grid-template-columns:1fr 80px 75px}
+ .timeline{grid-template-columns:1fr}
+ .light{width:58px;height:58px}
+ .navlinks{font-size:10px;gap:8px}
+ .hero h1{letter-spacing:-3px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="drops" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a href="#home" class="brand">RE<span>WAVE</span></a>
+  <div class="navlinks">
+    <a href="#solution">Solution</a>
+    <a href="#system">System</a>
+    <a href="#campus">Campus</a>
+    <a href="#impact">Impact</a>
+    <a href="#budget">Budget</a>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="hero-copy">
+    <span class="eyebrow">SDG 06 · CLEAN WATER & SANITATION</span>
+    <h1>RE<span>WAVE</span></h1>
+    <div class="tagline">Every Drop Deserves Another Life.</div>
+    <p>
+      What if the water flowing down your hostel drain could help
+      water a garden, flush a toilet, and make every drop count?
+      Meet a decentralised approach to water reuse.
+    </p>
+    <div class="actions">
+      <a class="btn" href="#solution">Explore the Solution ↘</a>
+      <a class="btn outline" href="#system">See How It Works</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong>33,000 L</strong><span>Estimated daily campus wastewater</span></div>
+      <div class="stat"><strong>2</strong><span>Proposed initial cartridges</span></div>
+      <div class="stat"><strong>₹30 L</strong><span>Maximum planning budget</span></div>
+    </div>
+    <p class="small" style="margin-top:12px">Project estimates, not independently verified measurements or final engineering specifications.</p>
+  </div>
+  <div class="hero-art">
+    <div class="orb">
+      <div class="bigdrop">💧</div>
+      <div class="orb-label">REUSE · RENEW · REWAVE</div>
+    </div>
+  </div>
+</header>
+
+<section id="solution">
+  <div class="section-head reveal">
+    <div class="eyebrow">01 / THE BIG IDEA</div>
+    <h2>Wastewater is not always <span class="gradient">the end of the story.</span></h2>
+    <p>REWAVE explores the collection and treatment of relatively lightly contaminated wastewater from washbasins and showers for suitable non-drinking applications.</p>
+  </div>
+  <div class="grid">
+    <article class="card reveal"><span class="icon">🚿</span><h3>Collect locally</h3><p>Capture suitable wastewater from hostel showers and washbasins using dedicated collection pipes.</p></article>
+    <article class="card reveal"><span class="icon">🧪</span><h3>Treat responsibly</h3><p>Combine appropriate screening, filtration and any additional treatment or disinfection required by testing.</p></article>
+    <article class="card reveal"><span class="icon">🌱</span><h3>Reuse wisely</h3><p>Supply only quality-approved water to selected non-potable uses such as irrigation and toilet flushing.</p></article>
+  </div>
+  <div class="flowchart reveal" id="fiveSteps">
+    <button class="flowstep active" data-step="0"><span class="icon">🚿</span><b>01. Collection</b></button><span class="arrow">→</span>
+    <button class="flowstep" data-step="1"><span class="icon">🧺</span><b>02. Screening</b></button><span class="arrow">→</span>
+    <button class="flowstep" data-step="2"><span class="icon">🫧</span><b>03. Filtration</b></button><span class="arrow">→</span>
+    <button class="flowstep" data-step="3"><span class="icon">🔬</span><b>04. Quality check</b></button><span class="arrow">→</span>
+    <button class="flowstep" data-step="4"><span class="icon">🌿</span><b>05. Reuse</b></button>
+  </div>
+  <div class="detailbox" id="stepDetail">
+    <h3>01. Collection</h3><p>Dedicated plumbing collects suitable greywater from washbasins and showers while keeping it separate from sewage and drinking-water systems.</p>
+  </div>
+  <div class="callout"><p><strong style="color:var(--yellow)">Important:</strong> Two cartridges and sensor lights do not, by themselves, prove water is safe. Treatment design and suitability for the intended use must be validated through appropriate water-quality testing.</p></div>
+</section>
+
+<section class="darkband" id="problem">
+  <div class="tank-layout">
+    <div class="reveal">
+      <div class="eyebrow">02 / THE OPPORTUNITY</div>
+      <h2>Every day. Every hostel. <span class="gradient">Every drop.</span></h2>
+      <div class="big-number">33,000 L</div>
+      <p>Illustrative daily wastewater estimate supplied for this project.</p>
+      <p style="margin-top:15px">Imagine the potential across campuses, hostels, apartments and local communities — provided suitable water can actually be collected and treated.</p>
+    </div>
+    <div class="reveal">
+      <div class="tank"><div class="water-fill" id="tankWater"></div><div class="tank-label">💧<br>WATER<br>REUSE</div></div>
+      <div class="comparison">
+        <div class="card"><strong>33,000 L</strong><p>One day</p></div>
+        <div class="card"><strong>9.9 lakh</strong><p>30 days</p></div>
+        <div class="card"><strong>1.2045 crore</strong><p>365 days</p></div>
+      </div>
+    </div>
+  </div>
+  <p class="small" style="margin-top:20px">Illustrative calculations based on 33,000 L/day. These figures are not guaranteed recoverable volumes. Actual output depends on measured wastewater generation, collection efficiency, treatment losses and water quality.</p>
+</section>
+
+<section id="why">
+  <div class="section-head reveal">
+    <div class="eyebrow">03 / WHY REWAVE?</div>
+    <h2>Big principles. <span class="gradient">Local implementation.</span></h2>
+  </div>
+  <div class="grid two">
+    <article class="card reveal">
+      <span class="icon">🏭</span><h3>Large-scale treatment</h3>
+      <p>Centralised infrastructure can serve large areas through extensive collection and distribution networks.</p>
+      <p style="margin-top:10px">◦ Large treatment facilities</p><p>◦ Complex infrastructure in some settings</p><p>◦ Wide distribution networks</p>
+    </article>
+    <article class="card reveal" style="border-color:#087cff">
+      <span class="icon">🏫</span><h3 class="glow">The REWAVE approach</h3>
+      <p>Explore modular water reuse designed around a smaller, local collection and distribution network.</p>
+      <p style="margin-top:10px">◦ College hostels and campuses</p><p>◦ Local residential communities</p><p>◦ Replaceable filtration components</p>
+    </article>
+  </div>
+  <div class="callout"><p>We are not trying to reinvent water recycling. We want to explore how existing water-reuse principles could become practical and accessible at the scale of a hostel, campus or local community. Cost-effectiveness and easy maintenance are goals to validate through a pilot, not proven outcomes.</p></div>
+</section>
+
+<section class="darkband" id="system">
+  <div class="section-head reveal">
+    <div class="eyebrow">04 / INSIDE THE SYSTEM</div>
+    <h2>Follow the <span class="gradient">water journey.</span></h2>
+    <p>Click any component to understand its proposed role in the treatment network.</p>
+  </div>
+  <div class="system">
+    <div class="pipeline reveal" id="pipeline"></div>
+    <div class="panel reveal">
+      <div class="eyebrow">COMPONENT EXPLORER</div>
+      <div style="font-size:42px;margin:15px 0" id="componentIcon">🚿</div>
+      <h3 id="componentTitle">Hostel washbasins & showers</h3>
+      <p id="componentDescription">The collection network starts at suitable wastewater sources in the hostel.</p>
+      <div class="callout"><p id="componentNote">Keep greywater separate from sewage and potable-water plumbing.</p></div>
+      <div style="margin-top:20px">
+        <span class="badge">INCOMING: BLUE PIPE</span>
+        <span class="badge" style="color:var(--green);border-color:#54ff9b50">APPROVED REUSE: GREEN PIPE</span>
+        <span class="badge" style="color:var(--red);border-color:#ff526850">REJECT: RED PATH</span>
+      </div>
+    </div>
+  </div>
+  <div class="callout"><p>Final filter media, cartridge specifications, disinfection, flow rates, storage and testing requirements must be established by engineering assessment. The illustrated arrangement is a proposed concept, not a validated treatment design.</p></div>
+</section>
+
+<section id="sensors">
+  <div class="section-head reveal">
+    <div class="eyebrow">05 / SMART SIGNALS</div>
+    <h2>Three signals. <span class="gradient">One responsible decision.</span></h2>
+    <p>This interactive panel uses demo scenarios only. It is not connected to real sensors and cannot certify water safety.</p>
+  </div>
+  <div class="grid two">
+    <div class="panel reveal">
+      <div class="lights">
+        <div class="light g" id="lightG">●</div>
+        <div class="light y" id="lightY">●</div>
+        <div class="light r active" id="lightR">●</div>
+      </div>
+      <div class="status r" id="waterStatus">DEMO: REJECT / DIVERT</div>
+      <div class="readings">
+        <div class="reading"><span>Flow rate</span><strong id="flowRead">12 L/min</strong></div>
+        <div class="reading"><span>Tank level</span><strong id="tankRead">65%</strong></div>
+        <div class="reading"><span>Turbidity</span><strong id="turbRead">8 NTU</strong></div>
+        <div class="reading"><span>pH</span><strong id="phRead">7.2</strong></div>
+        <div class="reading"><span>Filter</span><strong id="filterRead">CHECK</strong></div>
+        <div class="reading"><span>Approval</span><strong id="approvalRead">NO</strong></div>
+      </div>
+      <div class="actions">
+        <button class="btn green" onclick="testWater('g')">Simulate Green</button>
+        <button class="btn outline" onclick="testWater('y')">Simulate Yellow</button>
+        <button class="btn outline" onclick="testWater('r')">Simulate Red</button>
+      </div>
+      <p class="small" style="margin-top:15px">All displayed values are DEMO DATA. Green represents a hypothetical approved scenario, not an actual test result.</p>
+    </div>
+    <div class="reveal">
+      <div class="card" style="margin-bottom:12px"><h3 style="color:var(--green)">🟢 Green — Approved</h3><p>Required checks meet the defined limits for a specific non-potable use. The controller permits the approved reuse route.</p></div>
+      <div class="card" style="margin-bottom:12px"><h3 style="color:var(--yellow)">🟡 Yellow — Check required</h3><p>Readings are uncertain or require verification. Hold distribution while checks are performed.</p></div>
+      <div class="card"><h3 style="color:var(--red)">🔴 Red — Reject / divert</h3><p>A critical fault or quality failure is detected. Stop reuse and route water to an appropriate holding or treatment system.</p></div>
+      <p class="small" style="margin-top:15px">pH and turbidity alone cannot establish microbiological safety. Actual controls and testing must match the intended reuse application.</p>
+    </div>
+  </div>
+</section>
+
+<section class="darkband" id="campus">
+  <div class="section-head reveal">
+    <div class="eyebrow">06 / CAMPUS SIMULATOR</div>
+    <h2>One campus. <span class="gradient">Connected water.</span></h2>
+    <p>Select a building or switch the network view to explore the proposed flow. Pipeline animations are illustrative.</p>
+  </div>
+  <div class="campus-controls">
+    <button class="btn outline" onclick="campusMode('collection')">Show Collection Network</button>
+    <button class="btn outline" onclick="campusMode('filtration')">Show Filtration</button>
+    <button class="btn outline" onclick="campusMode('reuse')">Show Reuse Network</button>
+    <button class="btn" onclick="campusMode('all')">Show Entire Campus</button>
+  </div>
+  <div class="campus reveal">
+    <svg class="campus-pipes" viewBox="0 0 600 400" preserveAspectRatio="none">
+      <path id="campusBlue" class="pipeblue" d="M90 70 V185 H300 V210"/>
+      <path id="campusGreen" class="pipeg" d="M300 210 V285 H500 V325"/>
+    </svg>
+    <div class="campus-grid">
+      <button class="building" onclick="selectBuilding('Hostel A','Showers and washbasins are potential greywater sources.')">🏢<br>HOSTEL A</button>
+      <button class="building" onclick="selectBuilding('Hostel B','A second hostel block could connect after its wastewater is measured and assessed.')">🏢<br>HOSTEL B</button>
+      <button class="building" onclick="selectBuilding('Academic Block','Water sources and plumbing must be audited before adding this building.')">🏫<br>ACADEMIC BLOCK</button>
+      <button class="building" onclick="selectBuilding('Collection Tank','Incoming water is collected for controlled treatment.')">🛢️<br>COLLECTION TANK</button>
+      <button class="building" onclick="selectBuilding('Treatment Unit','Screening, filtration and additional treatment are determined through engineering validation.')">⚙️<br>REWAVE UNIT</button>
+      <button class="building" onclick="selectBuilding('Quality Control','Distribution stays on hold until required quality checks are satisfied.')">🔬<br>QUALITY CONTROL</button>
+      <button class="building" onclick="selectBuilding('Garden','Approved water may serve suitable landscaping or irrigation uses.')">🌳<br>GARDEN</button>
+      <button class="building" onclick="selectBuilding('Toilet Block','Approved non-potable water may supply flushing through a separate protected network.')">🚽<br>TOILET BLOCK</button>
+      <button class="building" onclick="selectBuilding('Utility Area','Selected utility applications require facility approval and appropriate water quality.')">🧹<br>UTILITY AREA</button>
+    </div>
+  </div>
+  <div class="detailbox" style="margin-top:15px">
+    <h3 id="buildingTitle">Entire campus network</h3>
+    <p id="buildingDetail">Blue represents incoming wastewater; green represents the proposed approved reuse network.</p>
+  </div>
+  <div class="grid two" style="margin-top:15px">
+    <div class="panel"><h3>Collection estimate</h3><div class="big-number" style="font-size:30px" id="campusCollected">33,000 L/day</div><label for="collectionRate">Estimated wastewater collected: <span id="collectionLabel">33,000</span> L/day</label><input id="collectionRate" type="range" min="0" max="33000" step="500" value="33000" oninput="updateImpact()"></div>
+    <div class="panel"><h3>Illustrative output</h3><div class="readings"><div class="reading"><span>Collected</span><strong id="colOut">33,000</strong></div><div class="reading"><span>Treated</span><strong id="treatedOut">26,400</strong></div><div class="reading"><span>Approved reuse</span><strong id="reuseOut">23,760</strong></div></div><p class="small">Assumes 80% treatment yield and 90% reuse approval for demonstration only. Change the assumptions below.</p></div>
+  </div>
+</section>
+
+<section id="irrigation">
+  <div class="section-head reveal">
+    <div class="eyebrow">07 / FROM TANK TO TREE</div>
+    <h2>Let approved water <span class="gradient">feed the green.</span></h2>
+    <p>A branching view of how quality-approved water could reach campus landscaping.</p>
+  </div>
+  <div class="tree-diagram">
+    <div class="tree-visual reveal"><div style="text-align:center"><div class="tree">🌳</div><div class="root">🌱 🌿 🌷 🌱</div><p style="margin-top:15px;color:#a7e9bb">A greener campus, one drop at a time.</p></div></div>
+    <div class="branch-list reveal">
+      <div class="branch"><strong>01 · Treated-water tank</strong><p>Hold treated water under controlled conditions.</p></div>
+      <div class="branch"><strong>↓ 02 · Quality approval</strong><p>Proceed only after the required checks are passed.</p></div>
+      <div class="branch"><strong>↓ 03 · Irrigation pipeline</strong><p>Separate non-potable distribution with suitable safeguards.</p></div>
+      <div class="branch"><strong>↓ 04 · Control valve</strong><p>Control water delivery and allocation.</p></div>
+      <div class="branch"><strong>↓ 05 · Drip irrigation</strong><p>Deliver water to suitable trees, shrubs, lawns and ornamental plants.</p></div>
+      <div class="branch" style="border-color:#ff526850"><strong style="color:var(--red)">↳ Quality failure → HOLD / DIVERT</strong><p>Rejected water must not enter the irrigation pipeline.</p></div>
+      <label for="irrigationVolume">Demo irrigation allocation: <span id="irrigationLabel">2,000</span> L/day</label>
+      <input id="irrigationVolume" type="range" min="0" max="10000" step="100" value="2000" oninput="document.getElementById('irrigationLabel').textContent=Number(this.value).toLocaleString('en-IN')">
+      <button class="btn green" onclick="runIrrigation()">▶ Run Irrigation Simulation</button>
+      <p id="irrigationMessage" class="small">Ready to simulate. Demo allocation only.</p>
+    </div>
+  </div>
+  <p class="small" style="margin-top:20px">Suitability depends on water quality, irrigation method, plant species, soil and exposure risks.</p>
+</section>
+
+<section class="darkband" id="toilet">
+  <div class="section-head reveal">
+    <div class="eyebrow">08 / SMART FLUSHING</div>
+    <h2>Flush with a <span class="gradient">separate water network.</span></h2>
+    <p>Toilet flushing is a potential non-potable application only when treatment, local requirements and plumbing safeguards permit it.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><span class="icon">🛢️</span><h3>1. Approved storage</h3><p>Water is stored only after the required quality checks.</p></div>
+    <div class="card"><span class="icon">🔵</span><h3>2. Dedicated pipeline</h3><p>Use separate non-potable plumbing and appropriate backflow prevention and cross-connection safeguards.</p></div>
+    <div class="card"><span class="icon">🚽</span><h3>3. Flushing cistern</h3><p>Supply the approved water to a designated flushing system, not drinking-water outlets.</p></div>
+  </div>
+  <div class="panel" style="margin-top:20px">
+    <div style="font-size:45px;text-align:center" id="toiletIcon">🛢️　〰️　🚽</div>
+    <div class="progress"><div id="toiletProgress"></div></div>
+    <div class="grid two">
+      <div><label for="flushVolume">Illustrative flushing demand served (L/day)</label><input id="flushVolume" type="range" min="0" max="10000" step="100" value="1500" oninput="document.getElementById('flushLabel').textContent=Number(this.value).toLocaleString('en-IN')"><p id="flushLabel" class="glow">1,500</p></div>
+      <div><label>Simulation status</label><p id="flushStatus">Waiting to run</p><button class="btn" onclick="runToilet()">▶ Simulate Toilet Reuse</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="applications">
+  <div class="section-head reveal"><div class="eyebrow">09 / WHERE IT MAY HELP</div><h2>More than one <span class="gradient">way to reuse.</span></h2></div>
+  <div class="utility-grid">
+    <article class="utility"><span class="icon">🌳</span><h3>Landscaping</h3><p class="small">Suitable trees, lawns and gardens.</p></article>
+    <article class="utility"><span class="icon">🚽</span><h3>Toilet flushing</h3><p class="small">Dedicated non-potable plumbing.</p></article>
+    <article class="utility"><span class="icon">🧹</span><h3>Floor cleaning</h3><p class="small">Approved floors and outdoor paved areas.</p></article>
+    <article class="utility"><span class="icon">🏢</span><h3>Utility uses</h3><p class="small">Selected applications subject to quality requirements.</p></article>
+    <article class="utility"><span class="icon">🏥</span><h3>Non-clinical areas</h3><p class="small">Only with facility approval and strict safeguards.</p></article>
+  </div>
+  <div class="callout"><p>REWAVE does not propose greywater for drinking, cooking, handwashing, bathing, medical procedures or other uses requiring potable or specialised water quality.</p></div>
+</section>
+
+<section class="darkband" id="budget">
+  <div class="section-head reveal">
+    <div class="eyebrow">10 / MAKE THE NUMBERS WORK</div>
+    <h2>Build your <span class="gradient">₹30 lakh budget.</span></h2>
+    <p>Adjust component quantities and preliminary unit costs. The calculator reports when the proposal exceeds the cap rather than silently reducing costs.</p>
+  </div>
+  <div class="budget-layout">
+    <div class="panel reveal">
+      <div class="cost-row" style="color:var(--cyan);font-weight:900"><span>COMPONENT</span><span>QUANTITY</span><span>UNIT COST ₹</span></div>
+      <div id="costRows"></div>
+      <div class="callout"><p>Known initial subtotal: <strong style="color:var(--cyan)">₹7,30,000</strong> (₹7,00,000 plumbing + two cartridges at ₹15,000 each). All other values below are editable planning assumptions.</p></div>
+      <button class="btn outline" onclick="resetBudget()" style="margin-top:15px">Reset to Initial Estimates</button>
+    </div>
+    <div class="panel budget-summary reveal">
+      <span class="badge">MAXIMUM BUDGET: ₹30,00,000</span>
+      <p style="margin-top:20px">Estimated project cost</p>
+      <div class="total" id="totalCost">₹7,30,000</div>
+      <div class="progress"><div id="budgetProgress"></div></div>
+      <div class="grid two">
+        <div class="reading"><span>Budget remaining</span><strong id="remaining">₹22,70,000</strong></div>
+        <div class="reading"><span>Utilisation</span><strong id="utilisation">24.3%</strong></div>
+      </div>
+      <div class="status g" id="budgetStatus" style="margin-top:15px">WITHIN PLANNING CAP</div>
+      <p class="warn" id="budgetWarning"></p>
+      <p class="small" style="margin-top:15px">Preliminary estimates, not supplier quotations. Actual costs depend on flow rate, site layout, treatment requirements, plumbing, installation and applicable standards. Being within budget does not prove feasibility.</p>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="section-head reveal">
+    <div class="eyebrow">11 / IMPACT EXPLORER</div>
+    <h2>Model the <span class="gradient">water saved.</span></h2>
+    <p>Change the assumptions to estimate potential reuse. These are modelled values, not verified project outcomes.</p>
+  </div>
+  <div class="grid two">
+    <div class="panel reveal">
+      <label for="yieldRate">Treatment yield: <span id="yieldLabel">80</span>%</label>
+      <input type="range" id="yieldRate" min="0" max="100" value="80" oninput="updateImpact()">
+      <label for="approvalRate">Share approved for reuse: <span id="approvalLabel">90</span>%</label>
+      <input type="range" id="approvalRate" min="0" max="100" value="90" oninput="updateImpact()">
+      <label for="irrigationDemand">Daily irrigation demand: <span id="irrigationDemandLabel">2,000</span> L</label>
+      <input type="range" id="irrigationDemand" min="0" max="20000" step="500" value="2000" oninput="updateImpact()">
+      <label for="flushDemand">Daily flushing demand: <span id="flushDemandLabel">5,000</span> L</label>
+      <input type="range" id="flushDemand" min="0" max="20000" step="500" value="5000" oninput="updateImpact()">
+    </div>
+    <div class="panel reveal">
+      <div class="impact-grid">
+        <div><p class="small">Daily collected</p><div class="impact-value" id="impactCollected">33,000</div><p class="small">litres</p></div>
+        <div><p class="small">Daily reusable</p><div class="impact-value" id="impactDaily">23,760</div><p class="small">litres</p></div>
+        <div><p class="small">Annual reusable</p><div class="impact-value" id="impactAnnual">86.72 lakh</div><p class="small">litres</p></div>
+      </div>
+      <div class="progress"><div id="impactProgress"></div></div>
+      <h3 style="margin-top:20px">Illustrative allocation</h3>
+      <p id="allocationText">Reuse is allocated to demand within the modelled available volume.</p>
+      <p class="small" style="margin-top:15px">Actual freshwater offset cannot exceed actual eligible demand and the quantity of water that is collected, treated and approved. No financial or carbon savings are assumed.</p>
+    </div>
+  </div>
+</section>
+
+<section class="darkband" id="roadmap">
+  <div class="section-head reveal"><div class="eyebrow">12 / FROM IDEA TO PILOT</div><h2>Start small. <span class="gradient">Validate. Scale.</span></h2></div>
+  <div class="timeline">
+    <div class="phase"><b>PHASE 01</b><h3>Campus water audit</h3><p>Measure actual washbasin and shower wastewater generation.</p></div>
+    <div class="phase"><b>PHASE 02</b><h3>System design</h3><p>Determine flow, treatment, storage, plumbing and testing needs.</p></div>
+    <div class="phase"><b>PHASE 03</b><h3>Pilot installation</h3><p>Build a small system for a selected hostel block or campus section.</p></div>
+    <div class="phase"><b>PHASE 04</b><h3>Testing & validation</h3><p>Evaluate water quality, treatment performance, maintenance and costs.</p></div>
+    <div class="phase"><b>PHASE 05</b><h3>Controlled reuse</h3><p>Start only approved non-potable uses after applicable requirements are met.</p></div>
+    <div class="phase"><b>PHASE 06</b><h3>Scale up</h3><p>Expand based on measured results and demonstrated feasibility.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="brand">REWAVE<span> 💧</span></div>
+  <div class="eyebrow">SDG 06 · A MORE CIRCULAR WATER FUTURE</div>
+  <h2>DON'T LET USABLE WATER<br><span class="gradient">GO TO WASTE.</span></h2>
+  <p>Start small. Reuse locally. Scale sustainably.</p>
+  <div class="actions">
+    <a class="btn outline" href="#system">Explore the System</a>
+    <a class="btn" href="#budget">Calculate Your Campus Budget</a>
+    <a class="btn green" href="#sensors">Simulate Water Reuse</a>
+  </div>
+  <p class="small" style="margin-top:35px">REWAVE — Giving Every Drop Another Life.</p>
+</footer>
+
+<script>
+// Animated opening droplets
+const dropBox=document.getElementById('drops');
+for(let i=0;i<35;i++){
+  const d=document.createElement('div');
+  d.className='drop';
+  d.style.left=Math.random()*100+'%';
+  d.style.animationDuration=(4+Math.random()*8)+'s';
+  d.style.animationDelay=(-Math.random()*10)+'s';
+  d.style.opacity=.2+Math.random()*.7;
+  d.style.transform=`scale(${.5+Math.random()})`;
+  dropBox.appendChild(d);
+}
+
+// Reveal cards on scroll
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Process step explorer
+const steps=[
+ ['01. Collection','Dedicated plumbing collects suitable greywater from washbasins and showers, keeping it separate from sewage and potable water.'],
+ ['02. Screening','A screen or suitable pre-filter removes hair, lint and larger debris before downstream treatment.'],
+ ['03. Filtration','Proposed treatment stages and two replaceable cartridges are evaluated. Cartridge media and performance must be selected through engineering validation.'],
+ ['04. Quality check','Relevant indicators, treatment controls and suitable laboratory or field testing are used to assess whether the water meets requirements for its intended use.'],
+ ['05. Storage and reuse','Only water that meets the applicable requirements is stored and distributed through a separate non-potable network.']
+];
+document.querySelectorAll('.flowstep').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.flowstep').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const s=steps[Number(btn.dataset.step)];
+    document.getElementById('stepDetail').innerHTML=`<h3>${s[0]}</h3><p>${s[1]}</p>`;
+  });
+});
+
+// Treatment-system component explorer
+const components=[
+ ['🚿','Hostel washbasins & showers','Potential source of relatively lightly contaminated wastewater.','Audit actual flows and keep the network separate from sewage.','blue'],
+ ['🔵','Dedicated collection pipeline','Transfers collected greywater to the treatment area.','Inspect pipe layout, materials and cross-connections.','blue'],
+ ['🧺','Screening and debris removal','Removes larger debris such as hair and lint.','Screening does not disinfect water.','blue'],
+ ['🛢️','Equalisation / collection tank','Provides a controlled point for collecting and managing incoming flows.','Storage and residence times need appropriate design.','blue'],
+ ['⚙️','Filtration stage 1','Provides the first selected filtration or treatment stage.','The media and performance must be validated.','blue'],
+ ['🧪','Filter cartridge 1','Replaceable filtration component in the proposed system.','Select cartridge media based on testing and design requirements.','blue'],
+ ['🫧','Filter cartridge 2','A second proposed replaceable cartridge.','Two cartridges alone do not establish water safety.','blue'],
+ ['✨','Additional treatment / disinfection','Additional treatment is provided where needed for the intended use.','Select technology and controls through engineering validation.','blue'],
+ ['🔬','Quality control panel','Monitors relevant indicators and records system status.','Sensor readings alone cannot prove microbiological safety.','blue'],
+ ['🟢','Treated-water storage','Stores water only after the required quality checks are passed.','Use safeguards and prevent recontamination.','green'],
+ ['🌱','Approved non-potable uses','Distributes suitable water to approved landscaping or flushing uses.','Use separate plumbing and suitable backflow protection.','green']
+];
+const pipeline=document.getElementById('pipeline');
+components.forEach((c,i)=>{
+  if(i>0)pipeline.insertAdjacentHTML('beforeend',`<div class="pipe ${i>=9?'green':''}"></div>`);
+  const b=document.createElement('button');
+  b.className='node';b.innerHTML=`<span class="symbol">${c[0]}</span><span><strong>${i+1}. ${c[1]}</strong><br><span class="small">${i>=9?'APPROVED REUSE ROUTE':'TREATMENT NETWORK'}</span></span>`;
+  b.onclick=()=>{
+    document.getElementById('componentIcon').textContent=c[0];
+    document.getElementById('componentTitle').textContent=c[1];
+    document.getElementById('componentDescription').textContent=c[2];
+    document.getElementById('componentNote').textContent=c[3];
+    document.querySelectorAll('.node').forEach(n=>n.style.borderColor='#1b4b68');
+    b.style.borderColor=c[4]==='green'?'#54ff9b':'#00e5ff';
+  };
+  pipeline.appendChild(b);
+});
+
+// Demo sensor panel
+function testWater(mode){
+  const all=['g','y','r'];
+  all.forEach(k=>document.getElementById('light'+k.toUpperCase()).classList.toggle('active',k===mode));
+  const status=document.getElementById('waterStatus');
+  status.className='status '+mode;
+  const data={
+    g:['DEMO: APPROVED FOR INTENDED USE','12 L/min','65%','2 NTU','7.1','OK','YES'],
+    y:['DEMO: CHECK REQUIRED','8 L/min','82%','5 NTU','7.6','CHECK','HOLD'],
+    r:['DEMO: REJECT / DIVERT','12 L/min','65%','8 NTU','7.2','FAULT','NO']
+  }[mode];
+  status.textContent=data[0];
+  ['flowRead','tankRead','turbRead','phRead','filterRead','approvalRead'].forEach((id,i)=>{
+    document.getElementById(id).textContent=data[i+1];
+  });
+}
+
+// Campus network toggles
+function campusMode(mode){
+  const blue=document.getElementById('campusBlue');
+  const green=document.getElementById('campusGreen');
+  blue.style.opacity=['collection','all'].includes(mode)?1:0;
+  green.style.opacity=['reuse','all'].includes(mode)?1:0;
+  if(mode==='filtration'){blue.style.opacity=.5;green.style.opacity=.5}
+  const texts={
+    collection:['Collection network','Blue pipes show illustrative incoming greywater from suitable source buildings to the collection and treatment system.'],
+    filtration:['Filtration system','The treatment unit includes proposed screening, filtration, quality controls and any additional treatment required.'],
+    reuse:['Reuse network','Green pipes represent the separate network for water approved for intended non-potable applications.'],
+    all:['Entire campus network','Illustrative campus view showing collection, treatment and approved reuse connections.']
+  };
+  document.getElementById('buildingTitle').textContent=texts[mode][0];
+  document.getElementById('buildingDetail').textContent=texts[mode][1];
+}
+function selectBuilding(name,description){
+  document.getElementById('buildingTitle').textContent=name;
+  document.getElementById('buildingDetail').textContent=description;
+}
+
+// Irrigation demo
+function runIrrigation(){
+  const volume=Number(document.getElementById('irrigationVolume').value);
+  const message=document.getElementById('irrigationMessage');
+  message.textContent=`Simulation complete: ${volume.toLocaleString('en-IN')} L/day allocated in the demo. Real allocation requires approved water quality and actual demand measurements.`;
+  document.querySelector('.tree-visual').style.boxShadow='0 0 35px #54ff9b70';
+  setTimeout(()=>document.querySelector('.tree-visual').style.boxShadow='',1800);
+}
+function runToilet(){
+  const v=Number(document.getElementById('flushVolume').value);
+  document.getElementById('toiletProgress').style.width=Math.min(100,v/10000*100)+'%';
+  document.getElementById('flushStatus').textContent=`Demo allocation: ${v.toLocaleString('en-IN')} L/day. Actual use requires quality approval and a protected, separate non-potable plumbing system.`;
+  document.getElementById('toiletIcon').textContent='🛢️　💧〰️　🚽';
+}
+
+// Budget estimator
+const budgetItems=[
+ {name:'Plumbing & collection network',qty:1,cost:700000},
+ {name:'Filter cartridge 1',qty:1,cost:15000},
+ {name:'Filter cartridge 2',qty:1,cost:15000},
+ {name:'Sensors & monitoring system',qty:1,cost:200000},
+ {name:'Collection & storage tanks',qty:1,cost:250000},
+ {name:'Additional treatment & disinfection',qty:1,cost:300000},
+ {name:'Installation & commissioning',qty:1,cost:250000},
+ {name:'Water-quality testing',qty:1,cost:75000},
+ {name:'Electricals & control system',qty:1,cost:100000},
+ {name:'Maintenance & replacement reserve',qty:1,cost:100000},
+ {name:'Contingency',qty:1,cost:200000}
+];
+const originalItems=budgetItems.map(x=>({...x}));
+const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+function renderCosts(){
+  const root=document.getElementById('costRows');root.innerHTML='';
+  budgetItems.forEach((item,i)=>{
+    const row=document.createElement('div');row.className='cost-row';
+    const name=document.createElement('span');name.textContent=item.name;
+    const qty=document.createElement('input');qty.type='number';qty.min=0;qty.max=1000;qty.step=1;qty.value=item.qty;qty.setAttribute('aria-label',item.name+' quantity');
+    const cost=document.createElement('input');cost.type='number';cost.min=0;cost.max=30000000;cost.step=1000;cost.value=item.cost;cost.setAttribute('aria-label',item.name+' unit cost in rupees');
+    qty.oninput=()=>{budgetItems[i].qty=Math.max(0,Math.min(1000,Number(qty.value)||0));updateBudget()};
+    cost.oninput=()=>{budgetItems[i].cost=Math.max(0,Math.min(30000000,Number(cost.value)||0));updateBudget()};
+    row.append(name,qty,cost);root.appendChild(row);
+  });
+}
+function updateBudget(){
+  const total=budgetItems.reduce((sum,x)=>sum+x.qty*x.cost,0);
+  const cap=3000000;
+  document.getElementById('totalCost').textContent=inr(total);
+  document.getElementById('remaining').textContent=inr(cap-total);
+  document.getElementById('utilisation').textContent=(total/cap*100).toFixed(1)+'%';
+  document.getElementById('budgetProgress').style.width=Math.min(100,total/cap*100)+'%';
+  const status=document.getElementById('budgetStatus');
+  const warning=document.getElementById('budgetWarning');
+  if(total>cap){
+    status.textContent='OVER BUDGET — REDESIGN REQUIRED';status.className='status r';
+    warning.textContent='Proposed costs exceed the ₹30 lakh cap by '+inr(total-cap)+'. The estimate has not been reduced automatically.';
+  }else{
+    status.textContent='WITHIN PLANNING CAP';status.className='status g';
+    warning.textContent='Remaining planning headroom: '+inr(cap-total)+'. Feasibility is not yet established.';
+  }
+}
+function resetBudget(){
+  budgetItems.forEach((x,i)=>Object.assign(x,originalItems[i]));
+  renderCosts();updateBudget();
+}
+renderCosts();updateBudget();
+
+// Environmental impact model
+function updateImpact(){
+  const collected=Number(document.getElementById('collectionRate').value);
+  const yieldPct=Number(document.getElementById('yieldRate').value);
+  const approvalPct=Number(document.getElementById('approvalRate').value);
+  const treated=collected*yieldPct/100;
+  const reusable=treated*approvalPct/100;
+  const irrigation=Number(document.getElementById('irrigationDemand').value);
+  const flushing=Number(document.getElementById('flushDemand').value);
+  const demand=irrigation+flushing;
+  const usable=Math.min(reusable,demand);
+  const fmt=n=>Math.round(n).toLocaleString('en-IN');
+  document.getElementById('collectionLabel').textContent=fmt(collected);
+  document.getElementById('campusCollected').textContent=fmt(collected)+' L/day';
+  document.getElementById('colOut').textContent=fmt(collected);
+  document.getElementById('treatedOut').textContent=fmt(treated);
+  document.getElementById('reuseOut').textContent=fmt(reusable);
+  document.getElementById('yieldLabel').textContent=yieldPct;
+  document.getElementById('approvalLabel').textContent=approvalPct;
+  document.getElementById('irrigationDemandLabel').textContent=fmt(irrigation);
+  document.getElementById('flushDemandLabel').textContent=fmt(flushing);
+  document.getElementById('impactCollected').textContent=fmt(collected);
+  document.getElementById('impactDaily').textContent=fmt(usable);
+  document.getElementById('impactAnnual').textContent=(usable*365/100000).toFixed(2)+' lakh';
+  document.getElementById('impactProgress').style.width=(collected?usable/collected*100:0)+'%';
+  document.getElementById('allocationText').textContent=
+    `Modelled eligible demand is ${fmt(demand)} L/day. Potential freshwater offset is capped at ${fmt(usable)} L/day, assuming sufficient eligible demand and approved water. Irrigation demand: ${fmt(irrigation)} L/day; flushing demand: ${fmt(flushing)} L/day.`;
+  document.getElementById('tankWater').style.height=(collected/33000*100)+'%';
+}
+['collectionRate','yieldRate','approvalRate','irrigationDemand','flushDemand'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updateImpact);
+});
+updateImpact();
+</script>
+
+</body>
+</html>
